@@ -8,11 +8,11 @@ const { sequelize, Sequelize } = require("./models");
 app.use(express.json());
 
 //Cai dat static file
-const publicPathDirectory = path.join(__dirname, "/public");
-app.use(express.static(publicPathDirectory));
+const publicPathDirectory = path.join(__dirname, "./public");
+app.use("/public", express.static(publicPathDirectory));
 
 //dung router
-app.use('/api/v1',rootRouter);
+app.use("/api/v1", rootRouter);
 
 //Lang nghe su kien ket noi
 app.listen(port, async () => {

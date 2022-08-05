@@ -45,7 +45,7 @@ const login = async (req, res) => {
         );
         res.status(200).send({
           message: `Đăng nhập thành công !`,
-          data: {user, token},
+          data: { user, token },
           status: true,
           errorCode: 200,
         });
@@ -72,7 +72,36 @@ const login = async (req, res) => {
   }
 };
 
+const uploadAvatar = async (req, res) => {
+  const { file } = req;
+  const { avatar, email } = req.user;
+  try {
+    const userFound = await User.findOne({
+      where: {
+        email,
+      },
+    });
+    if (userFound) {
+      userFound.avatar = file.path;
+      await userFound.save();
+      res.status(200).send({
+        message: `Thêm avatar thành công !`,
+        data: userFound,
+        status: true,
+        errorCode: 200,
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      message: `Thêm avatar thất bại !`,
+      status: false,
+      errorCode: 500,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
+  uploadAvatar,
 };
