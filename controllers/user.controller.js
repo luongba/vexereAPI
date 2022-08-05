@@ -1,16 +1,19 @@
 const { User } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const gravatar = require("gravatar");
 const register = async (req, res) => {
   const { name, email, password, numberPhone } = req.body;
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
+    const avatar = gravatar.url(email);
     const user = await User.create({
       name,
       email,
       password: hash,
       numberPhone,
+      avatar,
     });
     res.status(200).send({
       message: `Đăng ký thành công !`,
