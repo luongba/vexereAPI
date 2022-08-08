@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, sequelize } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
@@ -103,8 +103,34 @@ const uploadAvatar = async (req, res) => {
   }
 };
 
+const getAllTrip = async (req, res) => {
+  const {id} = req.params
+  try {
+    const [results] =
+      await sequelize.query(`SELECT users.name, fromSta.name as BenDi, toSta.name as BenDen,trips.price, trips.startTime 
+    FROM vexere.users 
+    inner join tickets on users.id = tickets.user_id
+    inner join trips on trips.id = tickets.trip_id
+    inner join stations as fromSta on fromSta.id = trips.fromStation
+    inner join stations as toSta on toSta.id = trips.toStation`);
+    res.status(200).send({
+      message: `Lấy danh sách chuyến đi của user thành công !`,
+      data: results,
+      status: true,
+      errorCode: 200,
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: `Lấy danh sách chuyến đi của user thất bại !`,
+      status: false,
+      errorCode: 500,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   uploadAvatar,
+  getAllTrip
 };
