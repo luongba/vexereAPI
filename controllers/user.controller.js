@@ -76,7 +76,7 @@ const login = async (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-  const { file } = req;
+  const { files } = req;
   const { avatar, email } = req.user;
   try {
     const userFound = await User.findOne({
@@ -85,7 +85,10 @@ const uploadAvatar = async (req, res) => {
       },
     });
     if (userFound) {
-      userFound.avatar = file.path;
+      const fileLoad = files.map(item => item.path);
+      console.log(typeof(fileLoad.toString()));
+      userFound.avatar = fileLoad.toString();
+      console.log(userFound.avatar);
       await userFound.save();
       res.status(200).send({
         message: `Thêm avatar thành công !`,

@@ -1,7 +1,7 @@
 const multer = require("multer");
 const mkdirp = require("mkdirp");
 const uploadImage = (type) => {
-  const made = mkdirp.sync(`./public/images/${type}`); // tao thu muc user truoc khi upload
+  mkdirp.sync('./public/images/'+type.toString()); // tao thu muc user truoc khi upload
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, `./public/images/${type}`);
@@ -27,7 +27,7 @@ const uploadImage = (type) => {
     size: 1024,
   });
 
-  return upload.single(type);
+  return upload.array(type, 6);
 };
 
 module.exports = {
